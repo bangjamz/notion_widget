@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Widget Ucapan Selamat</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/17.0.2/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/17.0.2/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .widget {
+            background-color: white;
+            border: 2px solid #333;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .greeting {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .date-time {
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        const GreetingWidget = () => {
+            const [currentTime, setCurrentTime] = React.useState(new Date());
+
+            React.useEffect(() => {
+                const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+                return () => clearInterval(timer);
+            }, []);
+
+            const getGreeting = () => {
+                const hour = currentTime.getHours();
+                if (hour >= 3 && hour < 11) return "Selamat Pagi";
+                if (hour >= 11 && hour < 15) return "Selamat Siang";
+                if (hour >= 15 && hour < 18) return "Selamat Sore";
+                return "Selamat Malam";
+            };
+
+            const formatDate = () => {
+                const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+                const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+                
+                const day = days[currentTime.getDay()];
+                const date = currentTime.getDate();
+                const month = months[currentTime.getMonth()];
+                const year = currentTime.getFullYear();
+                
+                return `${day}, ${date} ${month} ${year}`;
+            };
+
+            const formatTime = () => {
+                return currentTime.toLocaleTimeString('id-ID', { hour12: false });
+            };
+
+            return (
+                <div className="widget">
+                    <div className="greeting">{getGreeting()}</div>
+                    <div className="date-time">
+                        {formatDate()}
+                        <br />
+                        {formatTime()}
+                    </div>
+                </div>
+            );
+        };
+
+        ReactDOM.render(<GreetingWidget />, document.getElementById('root'));
+    </script>
+</body>
+</html>
