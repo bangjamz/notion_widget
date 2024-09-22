@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Widget Ucapan Selamat</title>
+    <title>Widget Ucapan Selamat Responsif</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/17.0.2/umd/react.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/17.0.2/umd/react-dom.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
@@ -15,23 +15,62 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #f0f0f0;
+            transition: background-color 0.3s, color 0.3s;
         }
         .widget {
-            background-color: white;
-            border: 2px solid #333;
             border-radius: 10px;
             padding: 20px;
             text-align: center;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
         }
         .greeting {
-            font-size: 24px;
             font-weight: bold;
             margin-bottom: 10px;
         }
-        .date-time {
-            font-size: 18px;
+        @media (max-width: 480px) {
+            .widget {
+                width: 90%;
+                max-width: 300px;
+            }
+            .greeting {
+                font-size: 20px;
+            }
+            .date-time {
+                font-size: 16px;
+            }
+        }
+        @media (min-width: 481px) {
+            .widget {
+                width: 80%;
+                max-width: 400px;
+            }
+            .greeting {
+                font-size: 24px;
+            }
+            .date-time {
+                font-size: 18px;
+            }
+        }
+        @media (prefers-color-scheme: light) {
+            body {
+                background-color: #f0f0f0;
+                color: #333;
+            }
+            .widget {
+                background-color: white;
+                border: 2px solid #333;
+            }
+        }
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #333;
+                color: #f0f0f0;
+            }
+            .widget {
+                background-color: #444;
+                border: 2px solid #f0f0f0;
+            }
         }
     </style>
 </head>
