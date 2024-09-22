@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Widget Ucapan Selamat untuk Notion</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/17.0.2/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/17.0.2/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+        }
+        #root {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            width: 100%;
+        }
+        .widget {
+            text-align: center;
+            padding: 20px;
+            border-radius: 8px;
+            transition: background-color 0.3s, color 0.3s;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .greeting {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .date-time {
+            font-size: 0.9em;
+        }
+        /* Default light theme */
+        body.light {
+            background-color: transparent;
+            color: #37352f;
+        }
+        .widget.light {
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+        /* Dark theme */
+        body.dark {
+            color: #ffffff;
+        }
+        .widget.dark {
+            background-color: rgba(55, 53, 47, 0.8);
+        }
+        /* Responsive font sizes */
+        @media (max-width: 480px) {
+            .greeting { font-size: 1.2em; }
+            .date-time { font-size: 0.8em; }
+        }
+        @media (min-width: 481px) and (max-width: 1024px) {
+            .greeting { font-size: 1.5em; }
+            .date-time { font-size: 0.9em; }
+        }
+        @media (min-width: 1025px) {
+            .greeting { font-size: 1.8em; }
+            .date-time { font-size: 1em; }
+        }
+    </style>
+</head>
+<body class="light">
+    <div id="root"></div>
+    <script type="text/babel">
+        const GreetingWidget = () => {
+            const [currentTime, setCurrentTime] = React.useState(new Date());
+            const [isDarkMode, setIsDarkMode] = React.useState(false);
+
+            React.useEffect(() => {
+                const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+                const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+                
+                const handleDarkModeChange = (e) => setIsDarkMode(e.matches);
+                darkModeMediaQuery.addEventListener('change', handleDarkModeChange);
+                setIsDarkMode(darkModeMediaQuery.matches);
+
+                document.body.className = darkModeMediaQuery.matches ? 'dark' : 'light';
+
+                return () => {
+                    clearInterval(timer);
+                    darkModeMediaQuery.removeEventListener('change', handleDarkModeChange);
+                };
+            }, []);
+
+            const getGreeting = () => {
+                const hour = currentTime.getHours();
+                if (hour >= 3 && hour < 11) return "Selamat Pagi";
+                if (hour >= 11 && hour < 15) return "Selamat Siang";
+                if (hour >= 15 && hour < 18) return "Selamat Sore";
+                return "Selamat Malam";
+            };
+
+            const formatDate = () => {
+                const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+                const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+                
+                const day = days[currentTime.getDay()];
+                const date = currentTime.getDate();
+                const month = months[currentTime.getMonth()];
+                const year = currentTime.getFullYear();
+                
+                return `${day}, ${date} ${month} ${year}`;
+            };
+
+            const formatTime = () => {
+                return currentTime.toLocaleTimeString('id-ID', { hour12: false });
+            };
+
+            return (
+                <div className={`widget ${isDarkMode ? 'dark' : 'light'}`}>
+                    <div className="greeting">{getGreeting()}</div>
+                    <div className="date-time">
+                        {formatDate()}
+                        <br />
+                        {formatTime()}
+                    </div>
+                </div>
+            );
+        };
+
+        ReactDOM.render(<GreetingWidget />, document.getElementById('root'));
+    </script>
+</body>
+</html>
